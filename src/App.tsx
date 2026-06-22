@@ -1,4 +1,4 @@
-removedimport { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Auth } from './components/Auth';
 import { StudentPortal } from './components/StudentPortal';
 import { AdminPortal } from './components/AdminPortal';
@@ -7,7 +7,7 @@ import type { ToastType } from './components/Notification';
 import { INITIAL_STUDENTS, INITIAL_DRIVES } from './mockData';
 import type { Student, PlacementDrive, Application } from './mockData';
 import { GraduationCap, LogOut, Shield } from 'lucide-react';
-import { useState } from 'react';
+
 
 function App() {
   const [students, setStudents] = useState<Student[]>(() => {
