@@ -25,6 +25,7 @@ interface AdminPortalProps {
   onUpdateStudentStatus: (studentId: string, company?: string, salaryPackage?: string) => void;
   onPromoteStudent: (studentId: string, driveId: string, newRoundIndex: number, isFinalSelection: boolean) => void;
   onRejectStudent: (studentId: string, driveId: string) => void;
+  onSeedData?: () => void;
 }
 
 export const AdminPortal: React.FC<AdminPortalProps> = ({
@@ -35,7 +36,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   onToggleDriveActive,
   onUpdateStudentStatus,
   onPromoteStudent,
-  onRejectStudent
+  onRejectStudent,
+  onSeedData
 }) => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'drives' | 'students' | 'tracker'>('dashboard');
 
@@ -223,6 +225,17 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             <LogOut size={18} />
             Log Out
           </button>
+
+          {onSeedData && (
+            <button 
+              onClick={onSeedData} 
+              className="menu-item hover:bg-indigo-500/10 hover:text-indigo-400 text-gray-400 mt-2"
+              title="Reset & Load Sample Data"
+            >
+              <Plus size={18} />
+              Reset & Seed Data
+            </button>
+          )}
         </div>
       </aside>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+removedimport { useState, useEffect } from 'react';
 import { Auth } from './components/Auth';
 import { StudentPortal } from './components/StudentPortal';
 import { AdminPortal } from './components/AdminPortal';
@@ -7,10 +7,17 @@ import type { ToastType } from './components/Notification';
 import { INITIAL_STUDENTS, INITIAL_DRIVES } from './mockData';
 import type { Student, PlacementDrive, Application } from './mockData';
 import { GraduationCap, LogOut, Shield } from 'lucide-react';
+import { useState } from 'react';
 
 function App() {
-  const [students, setStudents] = useState<Student[]>(INITIAL_STUDENTS);
-  const [drives, setDrives] = useState<PlacementDrive[]>(INITIAL_DRIVES);
+  const [students, setStudents] = useState<Student[]>(() => {
+    const saved = localStorage.getItem('tpo_students');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [drives, setDrives] = useState<PlacementDrive[]>(() => {
+    const saved = localStorage.getItem('tpo_drives');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [session, setSession] = useState<{ role: 'student' | 'admin'; studentId?: string } | null>(null);
   const [toast, setToast] = useState<ToastType | null>(null);
 
@@ -21,6 +28,22 @@ function App() {
       message,
       type
     });
+  };
+
+  // Synchronize state with localStorage
+  useEffect(() => {
+    localStorage.setItem('tpo_students', JSON.stringify(students));
+  }, [students]);
+
+  useEffect(() => {
+    localStorage.setItem('tpo_drives', JSON.stringify(drives));
+  }, [drives]);
+
+  // Seed sample data convenience helper
+  const handleSeedData = () => {
+    setStudents(INITIAL_STUDENTS);
+    setDrives(INITIAL_DRIVES);
+    triggerToast('Sample data seeded successfully. Feel free to log in!', 'success');
   };
 
   const handleLogin = (role: 'student' | 'admin', studentId?: string) => {
@@ -63,7 +86,7 @@ function App() {
     };
 
     // Update students list state
-    setStudents(prevStudents => 
+    setStudents(prevStudents =>
       prevStudents.map(s => {
         if (s.id === studentId) {
           return {
@@ -76,7 +99,7 @@ function App() {
     );
 
     // Update drives list state to bump count
-    setDrives(prevDrives => 
+    setDrives(prevDrives =>
       prevDrives.map(d => {
         if (d.id === driveId) {
           return {
@@ -95,7 +118,7 @@ function App() {
   const handleUpdateResumeScore = (score: number, resumeText: string) => {
     if (!session || session.role !== 'student' || !session.studentId) return;
 
-    setStudents(prevStudents => 
+    setStudents(prevStudents =>
       prevStudents.map(s => {
         if (s.id === session.studentId) {
           return {
@@ -109,6 +132,14 @@ function App() {
     );
 
     triggerToast(`Resume index optimized! New ATS Score: ${score}%`, 'success');
+  };
+
+  // Student updates profile details
+  const handleUpdateStudentProfile = (updatedStudent: Student) => {
+    setStudents(prevStudents =>
+      prevStudents.map(s => s.id === updatedStudent.id ? updatedStudent : s)
+    );
+    triggerToast('Profile settings saved successfully.', 'success');
   };
 
   // Admin launches new drive
@@ -125,7 +156,7 @@ function App() {
 
   // Admin suspends/reactivates drive
   const handleToggleDriveActive = (driveId: string) => {
-    setDrives(prevDrives => 
+    setDrives(prevDrives =>
       prevDrives.map(d => {
         if (d.id === driveId) {
           const nextState = !d.active;
@@ -145,7 +176,7 @@ function App() {
     const student = students.find(s => s.id === studentId);
     if (!student) return;
 
-    setStudents(prevStudents => 
+    setStudents(prevStudents =>
       prevStudents.map(s => {
         if (s.id === studentId) {
           if (company && salaryPackage) {
@@ -173,16 +204,16 @@ function App() {
 
   // Admin promotes candidate in tracker pipeline
   const handlePromoteStudent = (
-    studentId: string, 
-    driveId: string, 
-    newRoundIndex: number, 
+    studentId: string,
+    driveId: string,
+    newRoundIndex: number,
     isFinalSelection: boolean
   ) => {
     const student = students.find(s => s.id === studentId);
     const drive = drives.find(d => d.id === driveId);
     if (!student || !drive) return;
 
-    setStudents(prevStudents => 
+    setStudents(prevStudents =>
       prevStudents.map(s => {
         if (s.id === studentId) {
           const updatedApps = s.applications.map(app => {
@@ -240,7 +271,7 @@ function App() {
     const drive = drives.find(d => d.id === driveId);
     if (!student || !drive) return;
 
-    setStudents(prevStudents => 
+    setStudents(prevStudents =>
       prevStudents.map(s => {
         if (s.id === studentId) {
           return {
@@ -265,9 +296,14 @@ function App() {
   };
 
   // Get active logged in student object
-  const loggedInStudent = session?.role === 'student' 
-    ? students.find(s => s.id === session.studentId) 
+  const loggedInStudent = session?.role === 'student'
+    ? students.find(s => s.id === session.studentId)
     : undefined;
+
+  const handleRegisterStudent = (newStudent: Student) => {
+    setStudents(prevStudents => [...prevStudents, newStudent]);
+    triggerToast(`Student registration successful! Please sign in.`, 'success');
+  };
 
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -308,8 +344,8 @@ function App() {
                 </div>
               </div>
             )}
-            
-            <button 
+
+            <button
               onClick={handleLogout}
               className="btn btn-secondary btn-sm p-1.5 rounded-lg text-gray-400 hover:text-red-400 transition-colors"
               title="Sign Out"
@@ -323,7 +359,12 @@ function App() {
       {/* Layout Router Router view switcher */}
       <div className="flex-1 flex flex-col">
         {!session ? (
-          <Auth students={students} onLogin={handleLogin} />
+          <Auth
+            students={students}
+            onLogin={handleLogin}
+            onRegister={handleRegisterStudent}
+            onSeedData={handleSeedData}
+          />
         ) : session.role === 'student' && loggedInStudent ? (
           <StudentPortal
             currentStudent={loggedInStudent}
@@ -331,6 +372,7 @@ function App() {
             onLogout={handleLogout}
             onApply={handleApplyDrive}
             onUpdateResumeScore={handleUpdateResumeScore}
+            onUpdateStudentProfile={handleUpdateStudentProfile}
           />
         ) : (
           <AdminPortal
@@ -342,6 +384,7 @@ function App() {
             onUpdateStudentStatus={handleUpdateStudentStatus}
             onPromoteStudent={handlePromoteStudent}
             onRejectStudent={handleRejectStudent}
+            onSeedData={handleSeedData}
           />
         )}
       </div>

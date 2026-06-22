@@ -12,6 +12,7 @@ export interface Student {
   id: string;
   name: string;
   email: string;
+  password?: string;
   branch: 'Computer Science' | 'Information Technology' | 'Electronics' | 'Mechanical' | 'Electrical';
   cgpa: number;
   backlogs: number;
@@ -146,6 +147,7 @@ export const INITIAL_STUDENTS: Student[] = [
     id: 'std_1',
     name: 'Aravind Sharma',
     email: 'aravind.sharma@univ.edu',
+    password: 'student123',
     branch: 'Computer Science',
     cgpa: 9.1,
     backlogs: 0,
@@ -172,6 +174,7 @@ export const INITIAL_STUDENTS: Student[] = [
     id: 'std_2',
     name: 'Rohan Mehra',
     email: 'rohan.mehra@univ.edu',
+    password: 'student123',
     branch: 'Computer Science',
     cgpa: 8.3,
     backlogs: 0,
@@ -204,6 +207,7 @@ export const INITIAL_STUDENTS: Student[] = [
     id: 'std_3',
     name: 'Sneha Reddy',
     email: 'sneha.reddy@univ.edu',
+    password: 'student123',
     branch: 'Information Technology',
     cgpa: 7.9,
     backlogs: 0,
@@ -236,6 +240,7 @@ export const INITIAL_STUDENTS: Student[] = [
     id: 'std_4',
     name: 'Karan Malhotra',
     email: 'karan.malhotra@univ.edu',
+    password: 'student123',
     branch: 'Electronics',
     cgpa: 8.6,
     backlogs: 0,
@@ -262,6 +267,7 @@ export const INITIAL_STUDENTS: Student[] = [
     id: 'std_5',
     name: 'Priyanka Das',
     email: 'priyanka.das@univ.edu',
+    password: 'student123',
     branch: 'Electrical',
     cgpa: 7.2,
     backlogs: 1,
@@ -285,6 +291,7 @@ export const INITIAL_STUDENTS: Student[] = [
     id: 'std_6',
     name: 'Vikram Aditya',
     email: 'vikram.aditya@univ.edu',
+    password: 'student123',
     branch: 'Mechanical',
     cgpa: 6.8,
     backlogs: 2,

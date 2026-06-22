@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -11,7 +11,8 @@ import {
   Sparkles, 
   BookOpen, 
   Send,
-  GraduationCap
+  GraduationCap,
+  User
 } from 'lucide-react';
 import { MOCK_RESUME_TIPS, MOCK_INTERVIEW_QAS } from '../mockData';
 import type { Student, PlacementDrive } from '../mockData';
@@ -22,6 +23,7 @@ interface StudentPortalProps {
   onLogout: () => void;
   onApply: (driveId: string) => void;
   onUpdateResumeScore: (score: number, resumeText: string) => void;
+  onUpdateStudentProfile: (updatedStudent: Student) => void;
 }
 
 export const StudentPortal: React.FC<StudentPortalProps> = ({ 
@@ -29,10 +31,36 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   drives, 
   onLogout,
   onApply,
-  onUpdateResumeScore
+  onUpdateResumeScore,
+  onUpdateStudentProfile
 }) => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'drives' | 'ats' | 'interview' | 'visualizer'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'drives' | 'ats' | 'interview' | 'visualizer' | 'profile'>('dashboard');
   
+  // Profile Settings States
+  const [profileName, setProfileName] = useState(currentStudent.name);
+  const [profileEmail, setProfileEmail] = useState(currentStudent.email);
+  const [profilePassword, setProfilePassword] = useState(currentStudent.password || '');
+  const [profileBranch, setProfileBranch] = useState(currentStudent.branch);
+  const [profileCgpa, setProfileCgpa] = useState(currentStudent.cgpa.toString());
+  const [profileBacklogs, setProfileBacklogs] = useState(currentStudent.backlogs.toString());
+  const [profileSkills, setProfileSkills] = useState(currentStudent.skills.join(', '));
+  const [profileProjects, setProfileProjects] = useState(currentStudent.projectsCount.toString());
+  const [profileResume, setProfileResume] = useState(currentStudent.resumeText || '');
+
+  // Reset fields if logged-in student changes
+  useEffect(() => {
+    setProfileName(currentStudent.name);
+    setProfileEmail(currentStudent.email);
+    setProfilePassword(currentStudent.password || '');
+    setProfileBranch(currentStudent.branch);
+    setProfileCgpa(currentStudent.cgpa.toString());
+    setProfileBacklogs(currentStudent.backlogs.toString());
+    setProfileSkills(currentStudent.skills.join(', '));
+    setProfileProjects(currentStudent.projectsCount.toString());
+    setProfileResume(currentStudent.resumeText || '');
+    setResumeTextInput(currentStudent.resumeText || '');
+  }, [currentStudent.id]);
+
   // ATS Resume Scorer State
   const [resumeTextInput, setResumeTextInput] = useState(currentStudent.resumeText || '');
   const [atsReport, setAtsReport] = useState<{
@@ -169,6 +197,35 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     // Save back to main state
     onUpdateResumeScore(calcScore, resumeTextInput);
+  };
+
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cgpaNum = parseFloat(profileCgpa);
+    if (isNaN(cgpaNum) || cgpaNum < 0 || cgpaNum > 10) {
+      alert('CGPA must be a number between 0 and 10.');
+      return;
+    }
+    const backlogsNum = parseInt(profileBacklogs);
+    if (isNaN(backlogsNum) || backlogsNum < 0) {
+      alert('Backlogs cannot be negative.');
+      return;
+    }
+    
+    const updatedStudent: Student = {
+      ...currentStudent,
+      name: profileName.trim(),
+      email: profileEmail.trim(),
+      password: profilePassword,
+      branch: profileBranch,
+      cgpa: cgpaNum,
+      backlogs: backlogsNum,
+      skills: profileSkills.split(',').map(s => s.trim()).filter(Boolean),
+      projectsCount: parseInt(profileProjects) || 0,
+      resumeText: profileResume,
+    };
+    
+    onUpdateStudentProfile(updatedStudent);
   };
 
   // Start Interview Chat Simulator
@@ -314,6 +371,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           >
             <TrendingUp size={18} />
             Stage Visualizer
+          </button>
+          <button 
+            onClick={() => setActiveTab('profile')} 
+            className={`menu-item ${activeTab === 'profile' ? 'active' : ''}`}
+          >
+            <User size={18} />
+            Profile Settings
           </button>
           
           <div className="border-t border-white/5 my-3"></div>
@@ -905,6 +969,133 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {/* TAB 6: PROFILE SETTINGS */}
+        {activeTab === 'profile' && (
+          <div className="flex flex-col gap-6 animate-slide-in">
+            <div>
+              <h2 className="text-xl font-bold text-white font-display">Profile & Academic Settings</h2>
+              <p className="text-xs text-gray-400 mt-1">Keep your credentials and grades up to date. Compatibility matching dynamically adapts to your scores.</p>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="glass-card flex flex-col gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="input-group">
+                  <label className="input-label">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Email Address</label>
+                  <input
+                    type="email"
+                    required
+                    value={profileEmail}
+                    onChange={(e) => setProfileEmail(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="input-group">
+                  <label className="input-label">Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={profilePassword}
+                    onChange={(e) => setProfilePassword(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Branch/Major</label>
+                  <select
+                    value={profileBranch}
+                    onChange={(e: any) => setProfileBranch(e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Electrical">Electrical</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="input-group">
+                  <label className="input-label">Cumulative CGPA</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    required
+                    value={profileCgpa}
+                    onChange={(e) => setProfileCgpa(e.target.value)}
+                    min="0"
+                    max="10"
+                    className="input-field"
+                  />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Active Backlogs</label>
+                  <input
+                    type="number"
+                    required
+                    value={profileBacklogs}
+                    onChange={(e) => setProfileBacklogs(e.target.value)}
+                    min="0"
+                    className="input-field"
+                  />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Projects Built</label>
+                  <input
+                    type="number"
+                    required
+                    value={profileProjects}
+                    onChange={(e) => setProfileProjects(e.target.value)}
+                    min="0"
+                    className="input-field"
+                  />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">Technical Skills (comma-separated)</label>
+                <input
+                  type="text"
+                  required
+                  value={profileSkills}
+                  onChange={(e) => setProfileSkills(e.target.value)}
+                  className="input-field"
+                />
+              </div>
+
+              <div className="input-group mb-0">
+                <label className="input-label">Resume plain text summary (Syncs with ATS tool)</label>
+                <textarea
+                  rows={6}
+                  required
+                  value={profileResume}
+                  onChange={(e) => setProfileResume(e.target.value)}
+                  placeholder="Paste your resume details..."
+                  className="input-field resize-none text-xs leading-relaxed"
+                ></textarea>
+              </div>
+
+              <button type="submit" className="btn btn-primary w-full py-3 mt-2">
+                Save Profile Changes
+              </button>
+            </form>
           </div>
         )}
 
