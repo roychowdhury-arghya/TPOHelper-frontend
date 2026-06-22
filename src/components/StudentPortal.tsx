@@ -315,7 +315,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const selectedDrive = drives.find(d => d.id === selectedApplicationId);
 
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout dashboard-bg">
       {/* Side Menu Navigation */}
       <aside className="side-menu animate-slide-in">
         <div className="glass-card mb-4 flex flex-col items-center text-center p-6" style={{ borderBottom: '3px solid hsl(var(--color-primary))' }}>
@@ -428,11 +428,11 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
             {/* Dashboard metrics grid */}
             <div className="metrics-grid">
-              <div className="glass-card metric-card">
+              <div className="glass-card metric-card premium-card">
                 <div className="metric-icon-box">
                   <GraduationCap size={20} />
                 </div>
-                <div className="metric-value">{currentStudent.cgpa}</div>
+                <div className="metric-value text-4xl font-black">{currentStudent.cgpa}</div>
                 <div className="metric-label">Cumulative GPA</div>
               </div>
 
@@ -440,7 +440,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div className="metric-icon-box">
                   <Briefcase size={20} />
                 </div>
-                <div className="metric-value">{totalApplied}</div>
+                <div className="metric-value text-4xl font-black">{totalApplied}</div>
                 <div className="metric-label">Applications Submitted</div>
               </div>
 
@@ -448,7 +448,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div className="metric-icon-box">
                   <FileCheck size={20} />
                 </div>
-                <div className="metric-value">{currentStudent.resumeScore}%</div>
+                <div className="metric-value text-4xl font-black">{currentStudent.resumeScore}%</div>
                 <div className="metric-label">ATS Resume Score</div>
               </div>
 
@@ -456,7 +456,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div className="metric-icon-box">
                   <AlertCircle size={20} />
                 </div>
-                <div className="metric-value">{currentStudent.backlogs}</div>
+                <div className="metric-value text-4xl font-black">{currentStudent.backlogs}</div>
                 <div className="metric-label">Active Backlogs</div>
               </div>
             </div>
@@ -481,8 +481,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                           </div>
                           <div className="flex items-center gap-4">
                             <span className={`badge ${app.status === 'Selected' ? 'badge-success' :
-                                app.status === 'Rejected' ? 'badge-danger' :
-                                  'badge-info'
+                              app.status === 'Rejected' ? 'badge-danger' :
+                                'badge-info'
                               }`}>
                               {app.status}
                             </span>
@@ -569,8 +569,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                         <span className="badge badge-info">{drive.package}</span>
                         {hasApplied && (
                           <span className={`badge ${application?.status === 'Selected' ? 'badge-success' :
-                              application?.status === 'Rejected' ? 'badge-danger' :
-                                'badge-primary'
+                            application?.status === 'Rejected' ? 'badge-danger' :
+                              'badge-primary'
                             }`}>
                             Applied: {application?.status}
                           </span>
@@ -814,7 +814,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     <div
                       key={i}
                       className={`chat-bubble ${msg.sender === 'user' ? 'user' :
-                          msg.sender === 'feedback' ? 'feedback' : 'assistant'
+                        msg.sender === 'feedback' ? 'feedback' : 'assistant'
                         }`}
                     >
                       {msg.text}
@@ -906,8 +906,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                       </div>
                       <div>
                         <span className={`badge ${selectedApp.status === 'Selected' ? 'badge-success' :
-                            selectedApp.status === 'Rejected' ? 'badge-danger' :
-                              'badge-info'
+                          selectedApp.status === 'Rejected' ? 'badge-danger' :
+                            'badge-info'
                           }`}>
                           Current Status: {selectedApp.status}
                         </span>

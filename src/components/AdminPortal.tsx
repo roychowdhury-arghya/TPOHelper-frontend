@@ -167,21 +167,26 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   );
 
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout dashboard-bg">
       {/* Sidebar navigation */}
       <aside className="side-menu animate-slide-in">
-        <div className="glass-card mb-4 flex flex-col items-center text-center p-6" style={{ borderBottom: '3px solid hsl(var(--color-secondary))' }}>
-          <div className="avatar mb-3 text-lg bg-gradient-to-br from-indigo-500 to-purple-600">A</div>
-          <h3 className="font-semibold text-white truncate max-w-full font-display">TPO Administration</h3>
-          <p className="text-xs text-indigo-400 mt-0.5">University Admin Panel</p>
-          <div className="flex gap-4 mt-4 text-xs border-t border-white/5 pt-4 w-full justify-around">
+        <div className="admin-profile-card">
+          <div className="admin-avatar">
+            TA
+          </div>
+
+          <h3>TPO Administration</h3>
+          <p>University Admin Panel</p>
+
+          <div className="admin-stats">
             <div>
-              <p className="text-gray-500 font-medium text-[10px] uppercase tracking-wider">Placement Rate</p>
-              <p className="font-bold text-white mt-0.5 text-base">{placementRate}%</p>
+              <span>33%</span>
+              <small>Placement Rate</small>
             </div>
+
             <div>
-              <p className="text-gray-500 font-medium text-[10px] uppercase tracking-wider">Active Drives</p>
-              <p className="font-bold text-white mt-0.5 text-base">{activeDrivesCount}</p>
+              <span>5</span>
+              <small>Active Drives</small>
             </div>
           </div>
         </div>
@@ -245,48 +250,67 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         {/* TAB 1: DASHBOARD & CHARTS */}
         {activeTab === 'dashboard' && (
           <div className="flex flex-col gap-6 animate-slide-in">
-            <div className="glass-card relative overflow-hidden p-8 flex flex-col justify-center bg-gradient-to-r from-purple-950/30 to-indigo-950/30" style={{ borderLeft: '4px solid hsl(var(--color-primary))' }}>
-              <div className="absolute top-0 right-0 p-8 text-indigo-500/10 pointer-events-none">
-                <ShieldCheck size={120} />
+            <div className="dashboard-hero">
+              <div className="hero-icon">
+                <ShieldCheck size={80} />
               </div>
-              <span className="badge badge-success self-start mb-3">System Operational</span>
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white font-display">TPO Dashboard Analytics</h2>
-              <p className="text-gray-400 mt-2 text-sm max-w-xl">
-                Track recruitment drives, oversee student application cycles, update stage transitions, and generate cohort graphs.
-              </p>
+
+              <div className="hero-content">
+                <span className="hero-badge">
+                  ● SYSTEM OPERATIONAL
+                </span>
+
+                <h1>TPO Dashboard Analytics</h1>
+
+                <div className="hero-pills">
+                  <span>{activeDrivesCount} Active Drives</span>
+                  <span>{placedCount} Students Placed</span>
+                  <span>Avg Package {averagePackage} LPA</span>
+                </div>
+
+                <p>
+                  Track recruitment drives, oversee student
+                  application cycles, update stage transitions,
+                  and generate cohort graphs.
+                </p>
+              </div>
             </div>
+
+
+
+
 
             {/* Dashboard metrics */}
             <div className="metrics-grid">
-              <div className="glass-card metric-card">
+              <div className="dashboard-stat-card">
                 <div className="metric-icon-box">
                   <Users size={20} />
                 </div>
-                <div className="metric-value">{totalStudentsCount}</div>
+                <div className="metric-value text-4xl font-black">{totalStudentsCount}</div>
                 <div className="metric-label">Total Student Roster</div>
               </div>
 
-              <div className="glass-card metric-card success">
+              <div className="dashboard-stat-card">
                 <div className="metric-icon-box">
                   <Check size={20} />
                 </div>
-                <div className="metric-value">{placedCount}</div>
+                <div className="metric-value text-4xl font-black">{placedCount}</div>
                 <div className="metric-label">Placed Students ({placementRate}%)</div>
               </div>
 
-              <div className="glass-card metric-card info">
+              <div className="dashboard-stat-card">
                 <div className="metric-icon-box">
                   <Briefcase size={20} />
                 </div>
-                <div className="metric-value">{activeDrivesCount}</div>
+                <div className="metric-value text-4xl font-black">{activeDrivesCount}</div>
                 <div className="metric-label">Active Drives Running</div>
               </div>
 
-              <div className="glass-card metric-card warning">
+              <div className="dashboard-stat-card">
                 <div className="metric-icon-box">
                   <TrendingUp size={20} />
                 </div>
-                <div className="metric-value">{averagePackage} LPA</div>
+                <div className="metric-value text-4xl font-black">{averagePackage} LPA</div>
                 <div className="metric-label">Average CTC Offered</div>
               </div>
             </div>
@@ -294,7 +318,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             {/* Visual Charts (Custom SVGs) */}
             <div className="content-grid">
               {/* Chart 1: Drives package distribution */}
-              <div className="glass-card flex flex-col gap-4">
+              <div className="modern-chart-card">
                 <h3 className="text-base font-bold text-white font-display flex items-center gap-2">
                   <TrendingUp size={16} className="text-indigo-400" />
                   Salary Package Distribution (LPA)
@@ -527,16 +551,35 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             {/* Drives list */}
             <div className="flex flex-col gap-4">
               {drives.map(drive => (
-                <div key={drive.id} className="glass-card flex flex-col md:flex-row justify-between md:items-center gap-4">
+                <div
+                  key={drive.id}
+                  className="glass-card flex flex-col md:flex-row justify-between md:items-center gap-4 hover:scale-[1.01] transition-all duration-300"
+                  style={{
+                    borderLeft: drive.active
+                      ? "4px solid #6366f1"
+                      : "4px solid #ef4444"
+                  }}
+                >
                   <div>
                     <div className="flex items-center gap-3">
-                      <h3 className="font-bold text-white text-base font-display">{drive.companyName}</h3>
+                      <h3 className="font-bold text-xl text-white font-display">{drive.companyName}</h3>
                       <span className="badge badge-info">{drive.package}</span>
                       <span className={`badge ${drive.active ? 'badge-success' : 'badge-danger'}`}>
                         {drive.active ? 'Active' : 'Closed'}
                       </span>
                     </div>
-                    <p className="text-xs text-indigo-400 mt-1 font-semibold">{drive.role}</p>
+                    <p className="text-xs text-indigo-400 mt-1 font-semibold">{drive.role}
+                      <div className="flex gap-2 mt-3 flex-wrap">
+                        {drive.skillsRequired.slice(0, 4).map(skill => (
+                          <span
+                            key={skill}
+                            className="px-2 py-1 rounded-full bg-indigo-500/10 text-indigo-300 text-[10px]"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </p>
                     <p className="text-xs text-slate-400 leading-relaxed max-w-3xl mt-1.5">{drive.jobDesc}</p>
 
                     <div className="flex gap-4 flex-wrap mt-3 text-[10px] text-gray-500 font-semibold">
@@ -649,10 +692,26 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </tr>
                   ) : (
                     filteredStudents.map(student => (
-                      <tr key={student.id} className="hover:bg-white/20 transition-colors">
-                        <td className="p-4 font-semibold text-white">
-                          <p>{student.name}</p>
-                          <p className="text-[10px] text-gray-500 font-normal">{student.email}</p>
+                      <tr
+                        key={student.id}
+                        className="hover:bg-indigo-500/5 transition-all duration-300"
+                      >
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white">
+                              {student.name.charAt(0)}
+                            </div>
+
+                            <div>
+                              <p className="font-semibold text-white">
+                                {student.name}
+                              </p>
+
+                              <p className="text-[10px] text-gray-500">
+                                {student.email}
+                              </p>
+                            </div>
+                          </div>
                         </td>
                         <td className="p-4">{student.branch}</td>
                         <td className="p-4 font-mono font-medium">
@@ -789,7 +848,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     const isLastCol = colIndex === activeTrackerDrive.rounds.length - 1;
 
                     return (
-                      <div key={roundName} className="tracker-column animate-slide-in">
+                      <div
+                        key={roundName}
+                        className="tracker-column animate-slide-in hover:border-indigo-500/30 transition-all duration-300"
+                      >
                         <div className="column-header">
                           <h4 className="column-title truncate max-w-[140px]" title={roundName}>{roundName}</h4>
                           <span className="column-count">{columnApplications.length}</span>
@@ -802,7 +864,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                             </div>
                           ) : (
                             columnApplications.map(({ student }) => (
-                              <div key={student.id} className="candidate-card">
+                              <div key={student.id} className="candidate-card hover:scale-[1.02] hover:border-indigo-500/30 transition-all duration-300">
                                 <p className="candidate-name text-white truncate">{student.name}</p>
                                 <p className="candidate-details mt-0.5">{student.branch} (CGPA: {student.cgpa})</p>
 
