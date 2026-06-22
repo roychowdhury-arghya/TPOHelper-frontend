@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  FileCheck, 
-  MessageSquare, 
-  TrendingUp, 
-  LogOut, 
-  Award, 
-  AlertCircle, 
-  Sparkles, 
-  BookOpen, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  FileCheck,
+  MessageSquare,
+  TrendingUp,
+  LogOut,
+  Award,
+  AlertCircle,
+  Sparkles,
+  BookOpen,
   Send,
   GraduationCap,
   User
@@ -26,16 +26,16 @@ interface StudentPortalProps {
   onUpdateStudentProfile: (updatedStudent: Student) => void;
 }
 
-export const StudentPortal: React.FC<StudentPortalProps> = ({ 
-  currentStudent, 
-  drives, 
+export const StudentPortal: React.FC<StudentPortalProps> = ({
+  currentStudent,
+  drives,
   onLogout,
   onApply,
   onUpdateResumeScore,
   onUpdateStudentProfile
 }) => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'drives' | 'ats' | 'interview' | 'visualizer' | 'profile'>('dashboard');
-  
+
   // Profile Settings States
   const [profileName, setProfileName] = useState(currentStudent.name);
   const [profileEmail, setProfileEmail] = useState(currentStudent.email);
@@ -99,20 +99,22 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     const eligible = isGpaEligible && isBacklogEligible && isBranchEligible;
 
     if (!eligible) {
-      return { eligible: false, score: 0, reasons: [
-        !isGpaEligible && `GPA cut-off is ${drive.cgpaCutoff} (yours: ${student.cgpa})`,
-        !isBacklogEligible && `Max backlogs allowed is ${drive.maxBacklogs} (yours: ${student.backlogs})`,
-        !isBranchEligible && `Eligible branches: ${drive.allowedBranches.join(', ')} (your branch: ${student.branch})`
-      ].filter(Boolean) as string[] };
+      return {
+        eligible: false, score: 0, reasons: [
+          !isGpaEligible && `GPA cut-off is ${drive.cgpaCutoff} (yours: ${student.cgpa})`,
+          !isBacklogEligible && `Max backlogs allowed is ${drive.maxBacklogs} (yours: ${student.backlogs})`,
+          !isBranchEligible && `Eligible branches: ${drive.allowedBranches.join(', ')} (your branch: ${student.branch})`
+        ].filter(Boolean) as string[]
+      };
     }
 
     // 2. Compatibility Score (based on skills)
     const requiredSkills = drive.skillsRequired;
     const studentSkills = student.skills;
-    const matchingSkills = requiredSkills.filter(s => 
+    const matchingSkills = requiredSkills.filter(s =>
       studentSkills.some(ss => ss.toLowerCase() === s.toLowerCase())
     );
-    
+
     // Skill match portion (70% weight) + GPA boost (30% weight)
     const skillScore = requiredSkills.length > 0 ? (matchingSkills.length / requiredSkills.length) * 70 : 70;
     const gpaBonus = Math.min(((student.cgpa - drive.cgpaCutoff) / (10 - drive.cgpaCutoff)) * 30, 30);
@@ -211,7 +213,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       alert('Backlogs cannot be negative.');
       return;
     }
-    
+
     const updatedStudent: Student = {
       ...currentStudent,
       name: profileName.trim(),
@@ -224,7 +226,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       projectsCount: parseInt(profileProjects) || 0,
       resumeText: profileResume,
     };
-    
+
     onUpdateStudentProfile(updatedStudent);
   };
 
@@ -237,7 +239,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     setUserAnswer('');
     setIsInterviewFinished(false);
     setInterviewScores([]);
-    
+
     // Initial bot greetings
     setChatHistory([
       { sender: 'bot', text: `Welcome to your simulated ${role} Technical Interview. I will ask you standard technical and behavioral screening questions. Let's begin!` },
@@ -251,7 +253,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     const answer = userAnswer.trim();
     const currentQuestion = interviewQuestions[currentQuestionIndex];
-    
+
     // Add user answer to chat history
     const updatedHistory = [...chatHistory, { sender: 'user' as const, text: answer }];
     setChatHistory(updatedHistory);
@@ -259,7 +261,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     // Evaluate response
     const answerLower = answer.toLowerCase();
-    const matchedKeywords = currentQuestion.correctKeywords.filter((kw: string) => 
+    const matchedKeywords = currentQuestion.correctKeywords.filter((kw: string) =>
       answerLower.includes(kw.toLowerCase())
     );
 
@@ -275,7 +277,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     } else {
       feedbackText += `Your answer missed foundational terminology. `;
     }
-    
+
     if (scoreVal < 6) {
       feedbackText += `Recommendation: Try to integrate specific terminology. Mentioning "${currentQuestion.correctKeywords.slice(0, 3).join(', ')}" would strengthen the rating.`;
     } else {
@@ -337,53 +339,53 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
 
         <div className="glass-card flex flex-col gap-1.5 p-3">
-          <button 
-            onClick={() => setActiveTab('dashboard')} 
+          <button
+            onClick={() => setActiveTab('dashboard')}
             className={`menu-item ${activeTab === 'dashboard' ? 'active' : ''}`}
           >
             <LayoutDashboard size={18} />
             Dashboard
           </button>
-          <button 
-            onClick={() => setActiveTab('drives')} 
+          <button
+            onClick={() => setActiveTab('drives')}
             className={`menu-item ${activeTab === 'drives' ? 'active' : ''}`}
           >
             <Briefcase size={18} />
             Placement Drives
           </button>
-          <button 
-            onClick={() => setActiveTab('ats')} 
+          <button
+            onClick={() => setActiveTab('ats')}
             className={`menu-item ${activeTab === 'ats' ? 'active' : ''}`}
           >
             <FileCheck size={18} />
             ATS Resume Scorer
           </button>
-          <button 
-            onClick={() => setActiveTab('interview')} 
+          <button
+            onClick={() => setActiveTab('interview')}
             className={`menu-item ${activeTab === 'interview' ? 'active' : ''}`}
           >
             <MessageSquare size={18} />
             Mock Interview
           </button>
-          <button 
-            onClick={() => setActiveTab('visualizer')} 
+          <button
+            onClick={() => setActiveTab('visualizer')}
             className={`menu-item ${activeTab === 'visualizer' ? 'active' : ''}`}
           >
             <TrendingUp size={18} />
             Stage Visualizer
           </button>
-          <button 
-            onClick={() => setActiveTab('profile')} 
+          <button
+            onClick={() => setActiveTab('profile')}
             className={`menu-item ${activeTab === 'profile' ? 'active' : ''}`}
           >
             <User size={18} />
             Profile Settings
           </button>
-          
+
           <div className="border-t border-white/5 my-3"></div>
 
-          <button 
-            onClick={onLogout} 
+          <button
+            onClick={onLogout}
             className="menu-item hover:bg-red-500/10 hover:text-red-400 text-gray-400"
           >
             <LogOut size={18} />
@@ -394,7 +396,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* Main Content Area */}
       <main className="flex flex-col gap-6 animate-slide-in">
-        
+
         {/* TAB 1: DASHBOARD */}
         {activeTab === 'dashboard' && (
           <div className="flex flex-col gap-6 animate-slide-in">
@@ -408,7 +410,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 Hello, {currentStudent.name.split(' ')[0]}!
               </h2>
               <p className="text-gray-400 mt-2 text-sm md:text-base max-w-xl">
-                {isPlaced 
+                {isPlaced
                   ? `Congratulations on your selection at ${currentStudent.placedCompany}! Your placement process has completed.`
                   : "Keep your profile up-to-date, verify recruitment matching, and leverage mock interviews to boost selection rates."
                 }
@@ -478,14 +480,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                             <p className="text-xs text-indigo-400 mt-0.5">{app.role}</p>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className={`badge ${
-                              app.status === 'Selected' ? 'badge-success' :
-                              app.status === 'Rejected' ? 'badge-danger' :
-                              'badge-info'
-                            }`}>
+                            <span className={`badge ${app.status === 'Selected' ? 'badge-success' :
+                                app.status === 'Rejected' ? 'badge-danger' :
+                                  'badge-info'
+                              }`}>
                               {app.status}
                             </span>
-                            <button 
+                            <button
                               onClick={() => {
                                 setSelectedApplicationId(app.driveId);
                                 setActiveTab('visualizer');
@@ -505,7 +506,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               {/* Tips / Profile Completions */}
               <div className="glass-card flex flex-col gap-4">
                 <h3 className="text-lg font-bold text-white font-display">Smart Suggestions</h3>
-                
+
                 <div className="flex flex-col gap-3">
                   {currentStudent.resumeScore < 75 && (
                     <div className="flex gap-3 bg-amber-500/10 border border-amber-500/20 p-3.5 rounded-xl text-xs leading-relaxed text-amber-200">
@@ -567,19 +568,18 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                         <h3 className="text-lg font-bold text-white font-display">{drive.companyName}</h3>
                         <span className="badge badge-info">{drive.package}</span>
                         {hasApplied && (
-                          <span className={`badge ${
-                            application?.status === 'Selected' ? 'badge-success' :
-                            application?.status === 'Rejected' ? 'badge-danger' :
-                            'badge-primary'
-                          }`}>
+                          <span className={`badge ${application?.status === 'Selected' ? 'badge-success' :
+                              application?.status === 'Rejected' ? 'badge-danger' :
+                                'badge-primary'
+                            }`}>
                             Applied: {application?.status}
                           </span>
                         )}
                       </div>
-                      
+
                       <p className="text-xs font-semibold text-indigo-400">{drive.role}</p>
                       <p className="text-xs text-gray-400 leading-relaxed max-w-2xl">{drive.jobDesc}</p>
-                      
+
                       <div className="flex items-center gap-4 flex-wrap mt-2 text-xs text-gray-400">
                         <div>
                           <span className="font-semibold text-gray-500">Cut-off GPA:</span> {drive.cgpaCutoff}
@@ -596,11 +596,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                         {drive.skillsRequired.map(skill => {
                           const hasSkill = currentStudent.skills.some(ss => ss.toLowerCase() === skill.toLowerCase());
                           return (
-                            <span 
-                              key={skill} 
-                              className={`px-2 py-0.5 rounded text-[10px] ${
-                                hasSkill ? 'bg-indigo-500/20 text-indigo-300 font-semibold' : 'bg-slate-800 text-slate-500'
-                              }`}
+                            <span
+                              key={skill}
+                              className={`px-2 py-0.5 rounded text-[10px] ${hasSkill ? 'bg-indigo-500/20 text-indigo-300 font-semibold' : 'bg-slate-800 text-slate-500'
+                                }`}
                             >
                               {skill}
                             </span>
@@ -614,7 +613,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                         <>
                           <div className="text-2xl font-black text-emerald-400 font-display">{matchResult.score}%</div>
                           <div className="text-[10px] text-emerald-500/80 uppercase font-bold tracking-wider mt-0.5">Compatibility Match</div>
-                          
+
                           <button
                             disabled={hasApplied || isPlaced}
                             onClick={() => onApply(drive.id)}
@@ -629,7 +628,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                             <AlertCircle size={14} />
                             Ineligible
                           </div>
-                          
+
                           <div className="flex flex-col gap-1 mt-2 text-[10px] text-gray-500 text-left w-full leading-tight">
                             {matchResult.reasons?.map((reason, i) => (
                               <p key={i}>• {reason}</p>
@@ -719,7 +718,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                     <div className="border-t border-white/5 pt-4">
                       <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider mb-2">Detailed Checkpoints</h4>
-                      
+
                       <div className="flex flex-col gap-2 text-xs">
                         <div className="flex justify-between items-center py-1">
                           <span className="text-gray-500">Core Keyword Density:</span>
@@ -773,7 +772,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   <p className="text-xs text-gray-400 leading-relaxed">
                     Evaluates system designs, concurrency, DB indexes, React context state, async hooks, and basic compiler logic.
                   </p>
-                  <button 
+                  <button
                     onClick={() => handleStartInterview('Software Engineer')}
                     className="btn btn-primary mt-auto"
                   >
@@ -786,7 +785,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   <p className="text-xs text-gray-400 leading-relaxed">
                     Evaluates metrics calculation, messy datasets imputations, funnel conversions, stakeholder communications, and root cause reviews.
                   </p>
-                  <button 
+                  <button
                     onClick={() => handleStartInterview('Analyst')}
                     className="btn btn-primary mt-auto"
                   >
@@ -801,8 +800,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     <span className="badge badge-primary">{interviewRole} Interview</span>
                     <span className="text-xs text-gray-500">Question {Math.min(currentQuestionIndex + 1, interviewQuestions.length)} of {interviewQuestions.length}</span>
                   </div>
-                  <button 
-                    onClick={() => setInterviewRole(null)} 
+                  <button
+                    onClick={() => setInterviewRole(null)}
                     className="btn btn-secondary btn-sm"
                   >
                     Change Track
@@ -812,12 +811,11 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 {/* Chat window */}
                 <div className="chat-window">
                   {chatHistory.map((msg, i) => (
-                    <div 
-                      key={i} 
-                      className={`chat-bubble ${
-                        msg.sender === 'user' ? 'user' : 
-                        msg.sender === 'feedback' ? 'feedback' : 'assistant'
-                      }`}
+                    <div
+                      key={i}
+                      className={`chat-bubble ${msg.sender === 'user' ? 'user' :
+                          msg.sender === 'feedback' ? 'feedback' : 'assistant'
+                        }`}
                     >
                       {msg.text}
                     </div>
@@ -856,8 +854,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     <p className="text-xs text-slate-300 max-w-md mx-auto">
                       Your answer scoring records have been cataloged. Average Performance: {Math.round((interviewScores.reduce((a, b) => a + b, 0) / interviewScores.length) * 10)}%.
                     </p>
-                    <button 
-                      onClick={() => handleStartInterview(interviewRole)} 
+                    <button
+                      onClick={() => handleStartInterview(interviewRole)}
                       className="btn btn-outline btn-sm mx-auto mt-2"
                     >
                       Retry Simulator
@@ -907,11 +905,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                         <p className="text-xs text-indigo-400">{selectedDrive.role}</p>
                       </div>
                       <div>
-                        <span className={`badge ${
-                          selectedApp.status === 'Selected' ? 'badge-success' :
-                          selectedApp.status === 'Rejected' ? 'badge-danger' :
-                          'badge-info'
-                        }`}>
+                        <span className={`badge ${selectedApp.status === 'Selected' ? 'badge-success' :
+                            selectedApp.status === 'Rejected' ? 'badge-danger' :
+                              'badge-info'
+                          }`}>
                           Current Status: {selectedApp.status}
                         </span>
                       </div>
@@ -920,13 +917,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     {/* Timeline stepper */}
                     <div className="pipeline-stepper">
                       {/* Colored progress bar background based on completed steps */}
-                      <div 
-                        className="pipeline-progress-bar" 
-                        style={{ 
+                      <div
+                        className="pipeline-progress-bar"
+                        style={{
                           width: `${(selectedApp.currentRoundIndex / (selectedDrive.rounds.length - 1)) * 90}%`
                         }}
                       ></div>
-                      
+
                       {selectedDrive.rounds.map((round, index) => {
                         const isCompleted = index < selectedApp.currentRoundIndex || selectedApp.status === 'Selected';
                         const isActive = index === selectedApp.currentRoundIndex && selectedApp.status !== 'Selected' && selectedApp.status !== 'Rejected';
@@ -958,8 +955,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                       <div>
                         <h4 className="font-bold text-white text-sm font-display">TPO Feedback Log</h4>
                         <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                          {selectedApp.feedback 
-                            ? selectedApp.feedback 
+                          {selectedApp.feedback
+                            ? selectedApp.feedback
                             : `Status details: The recruitment board is currently processing candidates for the "${selectedDrive.rounds[selectedApp.currentRoundIndex]}" stage. Feedback logs will appear here once the round reviews conclude.`
                           }
                         </p>

@@ -12,11 +12,11 @@ interface AuthProps {
 export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSeedData }) => {
   const [activeTab, setActiveTab] = useState<'student' | 'admin'>('student');
   const [studentAuthMode, setStudentAuthMode] = useState<'login' | 'register'>('login');
-  
+
   // Student Login Fields
   const [studentEmail, setStudentEmail] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
-  
+
   // Student Register Fields
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
@@ -31,7 +31,7 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
   // Admin Credentials
   const [adminEmail, setAdminEmail] = useState('admin@university.edu');
   const [adminPassword, setAdminPassword] = useState('admin123');
-  
+
   const [error, setError] = useState('');
 
   const handleStudentSubmit = (e: React.FormEvent) => {
@@ -102,23 +102,54 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative" style={{ zIndex: 10 }}>
+    <div className="auth-layout">
       {/* Background glow effects built into page */}
       <div className="bg-glow-container">
         <div className="bg-glow-orb bg-glow-orb-1"></div>
         <div className="bg-glow-orb bg-glow-orb-2"></div>
       </div>
+      <div className="auth-hero">
+        <span className="hero-badge">
+          AI Powered Placement Management
+        </span>
 
-      <div className="glass-card animate-slide-in w-full max-w-lg p-8 relative overflow-hidden" style={{ borderTop: '4px solid hsl(var(--color-primary))' }}>
+        <h1>
+          Transform Campus Placements
+        </h1>
+
+        <p>
+          Track students, manage drives, analyze resumes,
+          conduct mock interviews and improve placement rates.
+        </p>
+
+        <div className="hero-stats">
+          <div>
+            <h2>5000+</h2>
+            <span>Students</span>
+          </div>
+
+          <div>
+            <h2>300+</h2>
+            <span>Companies</span>
+          </div>
+
+          <div>
+            <h2>95%</h2>
+            <span>Success Rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="auth-card animate-slide-in">
         {/* Decorative elements */}
         <div className="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl"></div>
-        
+
         {/* Title Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center p-3 bg-indigo-500/15 rounded-2xl text-indigo-400 mb-3 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
             <GraduationCap size={32} />
           </div>
-          <h1 className="text-2xl font-bold text-white font-display">TPOHelper</h1>
+          <h1 className="auth-title">TPOHelper</h1>
           <p className="text-sm text-gray-400 mt-1">University Placement & Training Portal</p>
         </div>
 
@@ -126,22 +157,20 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
         <div className="flex bg-black/30 p-1 rounded-xl mb-6 border border-white/5">
           <button
             onClick={() => { setActiveTab('student'); setError(''); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === 'student'
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'student'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-gray-400 hover:text-white hover:bg-white/5'
-            }`}
+              }`}
           >
             <GraduationCap size={16} />
             Student View
           </button>
           <button
             onClick={() => { setActiveTab('admin'); setError(''); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === 'admin'
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'admin'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-gray-400 hover:text-white hover:bg-white/5'
-            }`}
+              }`}
           >
             <Shield size={16} />
             TPO Admin
@@ -164,22 +193,20 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
               <button
                 type="button"
                 onClick={() => { setStudentAuthMode('login'); setError(''); }}
-                className={`text-xs font-semibold pb-1 border-b-2 transition-all ${
-                  studentAuthMode === 'login'
+                className={`text-xs font-semibold pb-1 border-b-2 transition-all ${studentAuthMode === 'login'
                     ? 'border-indigo-500 text-white'
                     : 'border-transparent text-gray-500 hover:text-gray-300'
-                }`}
+                  }`}
               >
                 Sign In
               </button>
               <button
                 type="button"
                 onClick={() => { setStudentAuthMode('register'); setError(''); }}
-                className={`text-xs font-semibold pb-1 border-b-2 transition-all ${
-                  studentAuthMode === 'register'
+                className={`text-xs font-semibold pb-1 border-b-2 transition-all ${studentAuthMode === 'register'
                     ? 'border-indigo-500 text-white'
                     : 'border-transparent text-gray-500 hover:text-gray-300'
-                }`}
+                  }`}
               >
                 New Account Registration
               </button>

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  Users, 
-  GitMerge, 
-  LogOut, 
-  Plus, 
-  Search, 
-  Check, 
-  X, 
-  FileText, 
-  ArrowRight, 
-  ShieldCheck, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  Users,
+  GitMerge,
+  LogOut,
+  Plus,
+  Search,
+  Check,
+  X,
+  FileText,
+  ArrowRight,
+  ShieldCheck,
   TrendingUp
 } from 'lucide-react';
 import type { Student, PlacementDrive } from '../mockData';
@@ -60,10 +60,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   const [branchFilter, setBranchFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
   const [minCgpaFilter, setMinCgpaFilter] = useState(5.0);
-  
+
   // Selected student for resume view
   const [selectedStudentForResume, setSelectedStudentForResume] = useState<Student | null>(null);
-  
+
   // Manual Status Change state
   const [statusChangeStudentId, setStatusChangeStudentId] = useState<string | null>(null);
   const [placedCompanyInput, setPlacedCompanyInput] = useState('');
@@ -142,8 +142,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   // Filter students roster
   const filteredStudents = students.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(studentSearch.toLowerCase()) || 
-                          student.email.toLowerCase().includes(studentSearch.toLowerCase());
+    const matchesSearch = student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+      student.email.toLowerCase().includes(studentSearch.toLowerCase());
     const matchesBranch = branchFilter === 'All' || student.branch === branchFilter;
     const matchesStatus = statusFilter === 'All' || student.placementStatus === statusFilter;
     const matchesCgpa = student.cgpa >= minCgpaFilter;
@@ -160,7 +160,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   // Tracker details
   const activeTrackerDrive = drives.find(d => d.id === trackerDriveId);
-  const activeTrackerApplications = students.flatMap(s => 
+  const activeTrackerApplications = students.flatMap(s =>
     s.applications
       .filter(app => app.driveId === trackerDriveId && app.status !== 'Rejected' && app.status !== 'Selected')
       .map(app => ({ student: s, app }))
@@ -187,39 +187,39 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </div>
 
         <div className="glass-card flex flex-col gap-1.5 p-3">
-          <button 
-            onClick={() => setActiveTab('dashboard')} 
+          <button
+            onClick={() => setActiveTab('dashboard')}
             className={`menu-item ${activeTab === 'dashboard' ? 'active' : ''}`}
           >
             <LayoutDashboard size={18} />
             Dashboard
           </button>
-          <button 
-            onClick={() => setActiveTab('drives')} 
+          <button
+            onClick={() => setActiveTab('drives')}
             className={`menu-item ${activeTab === 'drives' ? 'active' : ''}`}
           >
             <Briefcase size={18} />
             Recruitment Drives
           </button>
-          <button 
-            onClick={() => setActiveTab('students')} 
+          <button
+            onClick={() => setActiveTab('students')}
             className={`menu-item ${activeTab === 'students' ? 'active' : ''}`}
           >
             <Users size={18} />
             Student Database
           </button>
-          <button 
-            onClick={() => setActiveTab('tracker')} 
+          <button
+            onClick={() => setActiveTab('tracker')}
             className={`menu-item ${activeTab === 'tracker' ? 'active' : ''}`}
           >
             <GitMerge size={18} />
             Live Round Tracker
           </button>
-          
+
           <div className="border-t border-white/5 my-3"></div>
 
-          <button 
-            onClick={onLogout} 
+          <button
+            onClick={onLogout}
             className="menu-item hover:bg-red-500/10 hover:text-red-400 text-gray-400"
           >
             <LogOut size={18} />
@@ -227,8 +227,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           </button>
 
           {onSeedData && (
-            <button 
-              onClick={onSeedData} 
+            <button
+              onClick={onSeedData}
               className="menu-item hover:bg-indigo-500/10 hover:text-indigo-400 text-gray-400 mt-2"
               title="Reset & Load Sample Data"
             >
@@ -299,22 +299,22 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <TrendingUp size={16} className="text-indigo-400" />
                   Salary Package Distribution (LPA)
                 </h3>
-                
+
                 <div className="chart-container flex items-end justify-around pt-6 border-b border-l border-white/5 pb-2">
                   {drives.map((drive) => {
                     const maxHeight = 160;
                     const maxPackage = Math.max(...drives.map(d => d.numericPackage), 35);
                     const barHeight = (drive.numericPackage / maxPackage) * maxHeight;
-                    
+
                     return (
                       <div key={drive.id} className="flex flex-col items-center group w-12 relative">
                         {/* Tooltip value */}
                         <span className="absolute -top-6 bg-slate-900 border border-indigo-500/20 text-[10px] text-white px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity font-mono z-10">
                           {drive.package}
                         </span>
-                        
+
                         {/* SVG Bar */}
-                        <div 
+                        <div
                           className="w-8 rounded-t-md custom-chart-bar"
                           style={{
                             height: `${barHeight}px`,
@@ -322,7 +322,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                             boxShadow: '0 0 15px -3px hsl(var(--color-primary) / 30%)'
                           }}
                         ></div>
-                        
+
                         <p className="text-[10px] text-gray-500 mt-2 truncate w-full text-center" title={drive.companyName}>
                           {drive.companyName}
                         </p>
@@ -338,7 +338,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <Users size={16} className="text-purple-400" />
                   Placement Rates by Department
                 </h3>
-                
+
                 <div className="flex flex-col gap-3.5 justify-center py-2 h-full">
                   {branchData.map((data) => (
                     <div key={data.name} className="flex flex-col gap-1.5">
@@ -347,7 +347,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         <span className="text-indigo-300 font-bold font-mono">{data.pct}% ({data.placed}/{data.total})</span>
                       </div>
                       <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden border border-white/5">
-                        <div 
+                        <div
                           className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-1000"
                           style={{ width: `${data.pct}%` }}
                         ></div>
@@ -368,8 +368,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 <h2 className="text-xl font-bold text-white font-display">Manage Recruitment Drives</h2>
                 <p className="text-xs text-gray-400 mt-1">Configure selection criteria, branches eligibility, and recruitment steps.</p>
               </div>
-              <button 
-                onClick={() => setShowDriveForm(!showDriveForm)} 
+              <button
+                onClick={() => setShowDriveForm(!showDriveForm)}
                 className="btn btn-primary"
               >
                 {showDriveForm ? <X size={16} /> : <Plus size={16} />}
@@ -515,8 +515,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   ></textarea>
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn btn-primary md:col-span-2 py-3"
                 >
                   Create and Launch Campaign
@@ -538,7 +538,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </div>
                     <p className="text-xs text-indigo-400 mt-1 font-semibold">{drive.role}</p>
                     <p className="text-xs text-slate-400 leading-relaxed max-w-3xl mt-1.5">{drive.jobDesc}</p>
-                    
+
                     <div className="flex gap-4 flex-wrap mt-3 text-[10px] text-gray-500 font-semibold">
                       <span>Cut-off: {drive.cgpaCutoff} CGPA</span>
                       <span>Max Backlogs: {drive.maxBacklogs}</span>
@@ -682,7 +682,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                             >
                               <FileText size={14} />
                             </button>
-                            
+
                             {statusChangeStudentId === student.id ? (
                               <div className="flex gap-1 items-center bg-slate-900 border border-white/10 p-2 rounded-xl text-left absolute right-4 z-55 animate-slide-in shadow-2xl">
                                 <div className="flex flex-col gap-1.5">
@@ -701,13 +701,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                                     className="input-field p-1 text-[10px] w-28 h-7"
                                   />
                                   <div className="flex justify-end gap-1">
-                                    <button 
+                                    <button
                                       onClick={() => setStatusChangeStudentId(null)}
                                       className="btn btn-danger btn-sm p-1 h-5 text-[9px]"
                                     >
                                       Cancel
                                     </button>
-                                    <button 
+                                    <button
                                       onClick={() => handleManualStatusSave(student.id)}
                                       className="btn btn-success btn-sm p-1 h-5 text-[9px]"
                                     >
@@ -782,7 +782,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 <div className="live-tracker-board">
                   {activeTrackerDrive.rounds.map((roundName, colIndex) => {
                     // Filter candidates in this specific round index
-                    const columnApplications = activeTrackerApplications.filter(item => 
+                    const columnApplications = activeTrackerApplications.filter(item =>
                       item.app.currentRoundIndex === colIndex
                     );
 
@@ -805,7 +805,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                               <div key={student.id} className="candidate-card">
                                 <p className="candidate-name text-white truncate">{student.name}</p>
                                 <p className="candidate-details mt-0.5">{student.branch} (CGPA: {student.cgpa})</p>
-                                
+
                                 <div className="candidate-actions">
                                   <button
                                     onClick={() => onRejectStudent(student.id, activeTrackerDrive.id)}
@@ -846,7 +846,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       {selectedStudentForResume && (
         <div className="modal-overlay animate-slide-in">
           <div className="glass-card modal-content p-6 relative">
-            <button 
+            <button
               onClick={() => setSelectedStudentForResume(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
             >
