@@ -154,29 +154,32 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
         </div>
 
         {/* Auth Role Tabs */}
-        <div className="flex bg-black/30 p-1 rounded-xl mb-6 border border-white/5">
+        <div className="role-switch">
           <button
-            onClick={() => { setActiveTab('student'); setError(''); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'student'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            onClick={() => {
+              setActiveTab('student');
+              setError('');
+            }}
+            className={`role-btn ${activeTab === 'student' ? 'active' : ''
               }`}
           >
-            <GraduationCap size={16} />
+            <GraduationCap size={18} strokeWidth={2.2} />
+            <Shield size={18} strokeWidth={2.2} />
             Student View
           </button>
+
           <button
-            onClick={() => { setActiveTab('admin'); setError(''); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'admin'
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            onClick={() => {
+              setActiveTab('admin');
+              setError('');
+            }}
+            className={`role-btn ${activeTab === 'admin' ? 'active' : ''
               }`}
           >
-            <Shield size={16} />
+            <Shield size={18} />
             TPO Admin
           </button>
         </div>
-
         {/* Error Message */}
         {error && (
           <div className="bg-red-500/10 border border-red-500/30 text-red-200 text-xs rounded-lg p-3 mb-4 flex items-center gap-2">
@@ -194,8 +197,8 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
                 type="button"
                 onClick={() => { setStudentAuthMode('login'); setError(''); }}
                 className={`text-xs font-semibold pb-1 border-b-2 transition-all ${studentAuthMode === 'login'
-                    ? 'border-indigo-500 text-white'
-                    : 'border-transparent text-gray-500 hover:text-gray-300'
+                  ? 'border-indigo-500 text-white'
+                  : 'border-transparent text-gray-500 hover:text-gray-300'
                   }`}
               >
                 Sign In
@@ -204,8 +207,8 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
                 type="button"
                 onClick={() => { setStudentAuthMode('register'); setError(''); }}
                 className={`text-xs font-semibold pb-1 border-b-2 transition-all ${studentAuthMode === 'register'
-                    ? 'border-indigo-500 text-white'
-                    : 'border-transparent text-gray-500 hover:text-gray-300'
+                  ? 'border-indigo-500 text-white'
+                  : 'border-transparent text-gray-500 hover:text-gray-300'
                   }`}
               >
                 New Account Registration
