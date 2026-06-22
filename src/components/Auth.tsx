@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, GraduationCap, ArrowRight, LogIn, UserPlus, Database } from 'lucide-react';
+import { Shield, GraduationCap, ArrowRight, LogIn, UserPlus, Mail, Database } from 'lucide-react';
 import type { Student } from '../mockData';
 
 interface AuthProps {
@@ -192,42 +192,47 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
         {activeTab === 'student' ? (
           <div className="animate-slide-in">
             {/* Student Auth Mode Switcher */}
-            <div className="flex gap-4 border-b border-white/5 pb-4 mb-4">
+            <div className="auth-mode-tabs">
               <button
                 type="button"
-                onClick={() => { setStudentAuthMode('login'); setError(''); }}
-                className={`text-xs font-semibold pb-1 border-b-2 transition-all ${studentAuthMode === 'login'
-                  ? 'border-indigo-500 text-white'
-                  : 'border-transparent text-gray-500 hover:text-gray-300'
-                  }`}
+                onClick={() => {
+                  setStudentAuthMode('login');
+                  setError('');
+                }}
+                className={studentAuthMode === 'login' ? 'active' : ''}
               >
                 Sign In
               </button>
+
               <button
                 type="button"
-                onClick={() => { setStudentAuthMode('register'); setError(''); }}
-                className={`text-xs font-semibold pb-1 border-b-2 transition-all ${studentAuthMode === 'register'
-                  ? 'border-indigo-500 text-white'
-                  : 'border-transparent text-gray-500 hover:text-gray-300'
-                  }`}
+                onClick={() => {
+                  setStudentAuthMode('register');
+                  setError('');
+                }}
+                className={studentAuthMode === 'register' ? 'active' : ''}
               >
-                New Account Registration
+                Register New Account
               </button>
             </div>
 
-            <form onSubmit={handleStudentSubmit} className="flex flex-col gap-1.5">
+            <form onSubmit={handleStudentSubmit} className="flex flex-col gap-4">
               {studentAuthMode === 'login' ? (
                 <>
                   <div className="input-group">
                     <label className="input-label">Student Email</label>
-                    <input
-                      type="email"
-                      required
-                      value={studentEmail}
-                      onChange={(e) => setStudentEmail(e.target.value)}
-                      placeholder="student@univ.edu"
-                      className="input-field"
-                    />
+
+                    <div className="input-box">
+                      <Mail size={18} />
+                      <input
+                        type="email"
+                        required
+                        value={studentEmail}
+                        onChange={(e) => setStudentEmail(e.target.value)}
+                        placeholder="student@univ.edu"
+                        className="input-field"
+                      />
+                    </div>
                   </div>
 
                   <div className="input-group">
@@ -248,8 +253,8 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
                   </button>
                 </>
               ) : (
-                <div className="max-h-[400px] overflow-y-auto pr-1 flex flex-col gap-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="max-h-[520px] overflow-y-auto pr-1 flex flex-col gap-2">
+                  <div className="form-grid">
                     <div className="input-group">
                       <label className="input-label">Full Name</label>
                       <input
@@ -274,7 +279,7 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="form-grid">
                     <div className="input-group">
                       <label className="input-label">Password</label>
                       <input
@@ -401,7 +406,7 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
               />
             </div>
 
-            <div className="mt-4 mb-6 bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-gray-400 flex flex-col gap-1">
+            <div className="admin-info-card">
               <div className="flex justify-between">
                 <span>Default Admin Email:</span>
                 <span className="font-mono text-white font-medium">admin@university.edu</span>
@@ -414,7 +419,7 @@ export const Auth: React.FC<AuthProps> = ({ students, onLogin, onRegister, onSee
 
             <button
               type="submit"
-              className="btn btn-primary w-full py-3"
+              className="auth-submit"
             >
               Authenticate Admin
               <LogIn size={18} />
