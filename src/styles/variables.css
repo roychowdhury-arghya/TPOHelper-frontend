@@ -1,0 +1,149 @@
+/* ----------------------------------------------------
+   TPOHelper Design System Variables
+   ---------------------------------------------------- */
+
+:root {
+  /* Brand Palette (Hex values as requested) */
+  --color-bg: #0b1220;
+  --color-surface: #111827;
+  --color-surface-elevated: #1f2937;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #14b8a6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* HSL representation coordinates for internal styling compatibilities */
+  --color-primary-hsl:       221deg 83% 53%;   /* #2563eb */
+  --color-primary-light-hsl: 221deg 83% 65%;
+  --color-secondary-hsl:     250deg 70% 60%;
+  --color-accent-hsl:        173deg 80% 40%;   /* #14b8a6 */
+  --color-success-hsl:       160deg 84% 39%;   /* #10b981 */
+  --color-warning-hsl:        38deg 93% 50%;   /* #f59e0b */
+  --color-danger-hsl:          0deg 84% 60%;   /* #ef4444 */
+  --color-info-hsl:          195deg 85% 45%;
+
+  /* Mapping to layout layers */
+  --bg-base:        220deg 48% 8%;      /* matches --color-bg #0b1220 */
+  --bg-surface:     222deg 39% 11%;     /* matches --color-surface #111827 */
+  --bg-elevated:    215deg 28% 17%;     /* matches --color-surface-elevated #1f2937 */
+  --bg-overlay:     220deg 18% 22%;
+
+  /* Compatibility bindings */
+  --color-primary:       var(--color-primary-hsl);
+  --color-primary-light: var(--color-primary-light-hsl);
+  --color-primary-dim:   var(--color-primary-hsl) / 15%;
+  --color-secondary:     var(--color-secondary-hsl);
+  --color-accent:        var(--color-accent-hsl);
+  --color-success:       var(--color-success-hsl);
+  --color-warning:        var(--color-warning-hsl);
+  --color-danger:          var(--color-danger-hsl);
+  --color-info:          var(--color-info-hsl);
+
+  --bg-dark:        var(--bg-base);
+  --bg-card:        var(--bg-surface);
+  --bg-card-hover:  var(--bg-elevated);
+  --bg-card-glass:  var(--bg-surface) / 80%;
+  --border-glass:   215deg 100% 100% / 6%;
+  --border-subtle:  215deg 100% 100% / 8%;
+  --border-focus:   221deg 83% 58% / 50%;
+
+  /* Fonts */
+  --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', 'Inter', sans-serif;
+  --font-mono: 'Fira Code', 'JetBrains Mono', monospace;
+
+  /* Typography Colors (More refined contrast hierarchy) */
+  --text-primary:   220deg 100% 98%;    /* Crisp pure off-white */
+  --text-secondary: 215deg 20% 74%;     /* Softer body slate */
+  --text-muted:     215deg 16% 56%;     /* Calm grey for captions */
+  --text-placeholder: 215deg 12% 38%;
+
+  /* Spacing Scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Border Radius Scale */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 24px;
+
+  /* Shadows */
+  --shadow-xs:   0 1px 2px rgba(0,0,0,0.25);
+  --shadow-sm:   0 2px 6px rgba(0,0,0,0.3);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-lg:   0 12px 48px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 28px -6px hsl(var(--color-primary-hsl) / 30%);
+  --shadow-glow-sm: 0 0 16px -4px hsl(var(--color-primary-hsl) / 22%);
+
+  /* Transitions */
+  --transition-fast:   all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Inputs */
+  --input-bg:     rgba(255, 255, 255, 0.035);
+  --input-border: rgba(255, 255, 255, 0.08);
+  --input-text:   #f0f4ff;
+}
+
+[data-theme="light"] {
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #f1f5f9;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #0d9488;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+
+  /* HSL mapping for light mode compatibility */
+  --bg-base:     210deg 20% 97%;
+  --bg-surface:  0deg 0% 100%;
+  --bg-elevated: 210deg 20% 95%;
+  --bg-overlay:  0deg 0% 100%;
+
+  --bg-dark:        var(--bg-base);
+  --bg-card:        var(--bg-surface);
+  --bg-card-hover:  var(--bg-elevated);
+  --bg-card-glass:  0deg 0% 100% / 85%;
+  --border-glass:   0deg 0% 0% / 6%;
+  --border-subtle:  0deg 0% 0% / 8%;
+  --border-focus:   221deg 83% 58% / 40%;
+
+  --color-primary-hsl:       221deg 83% 53%;
+  --color-primary-light-hsl: 221deg 83% 45%;
+  --color-secondary-hsl:     250deg 70% 58%;
+  --color-accent-hsl:        172deg 66% 38%;
+  --color-success-hsl:       151deg 55% 36%;
+  --color-warning-hsl:        38deg 92% 48%;
+  --color-danger-hsl:          0deg 72% 52%;
+
+  --text-primary:   222deg 40% 15%;
+  --text-secondary: 215deg 16% 38%;
+  --text-muted:     215deg 14% 52%;
+  --text-placeholder: 215deg 12% 64%;
+
+  --input-bg:     #ffffff;
+  --input-border: rgba(0,0,0,0.08);
+  --input-text:   #0f172a;
+
+  --shadow-xs:   0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm:   0 2px 6px rgba(0,0,0,0.06);
+  --shadow-card: 0 4px 20px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lg:   0 10px 40px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-glow: 0 0 24px -6px hsl(var(--color-primary-hsl) / 14%);
+  --shadow-glow-sm: 0 0 14px -4px hsl(var(--color-primary-hsl) / 10%);
+}

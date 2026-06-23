@@ -24,6 +24,7 @@ export interface Student {
   projectsCount: number;
   resumeText: string;
   applications: Application[];
+  profilePic?: string;
 }
 
 export interface PlacementDrive {
@@ -168,7 +169,8 @@ export const INITIAL_STUDENTS: Student[] = [
         currentRoundIndex: 3,
         feedback: 'Outstanding technical performance across all rounds. Exceptional data structures and problem-solving abilities shown.'
       }
-    ]
+    ],
+    profilePic: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
     id: 'std_2',
@@ -201,7 +203,8 @@ export const INITIAL_STUDENTS: Student[] = [
         status: 'Test Scheduled',
         currentRoundIndex: 0
       }
-    ]
+    ],
+    profilePic: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
     id: 'std_3',
@@ -234,7 +237,8 @@ export const INITIAL_STUDENTS: Student[] = [
         status: 'Applied',
         currentRoundIndex: 0
       }
-    ]
+    ],
+    profilePic: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
     id: 'std_4',
@@ -261,7 +265,8 @@ export const INITIAL_STUDENTS: Student[] = [
         currentRoundIndex: 3,
         feedback: 'Exceptional score in the Compiler test. Excellent understanding of computer hardware architecture.'
       }
-    ]
+    ],
+    profilePic: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
     id: 'std_5',
@@ -285,7 +290,8 @@ export const INITIAL_STUDENTS: Student[] = [
         status: 'Applied',
         currentRoundIndex: 0
       }
-    ]
+    ],
+    profilePic: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
     id: 'std_6',
@@ -300,7 +306,8 @@ export const INITIAL_STUDENTS: Student[] = [
     skills: ['SolidWorks', 'AutoCAD', 'Excel', 'Project Management'],
     projectsCount: 2,
     resumeText: 'Mechanical Engineering enthusiast. Fluent in AutoCAD and SolidWorks drafting. Modeled a formula-student race car frame and ran structural load stress tests. Strong team coordination and operations lead.',
-    applications: []
+    applications: [],
+    profilePic: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   }
 ];
 

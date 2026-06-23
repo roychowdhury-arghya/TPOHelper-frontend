@@ -6,20 +6,31 @@ import { Notification } from './components/Notification';
 import type { ToastType } from './components/Notification';
 import { INITIAL_STUDENTS, INITIAL_DRIVES } from './mockData';
 import type { Student, PlacementDrive, Application } from './mockData';
-import { GraduationCap, LogOut, Shield } from 'lucide-react';
-
+import { CustomCursor } from './components/CustomCursor';
+import { useTheme } from './ThemeContext';
+import type { AppNotification } from './components/NotificationCenter';
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
+  
   const [students, setStudents] = useState<Student[]>(() => {
     const saved = localStorage.getItem('tpo_students');
     return saved ? JSON.parse(saved) : [];
   });
+  
   const [drives, setDrives] = useState<PlacementDrive[]>(() => {
     const saved = localStorage.getItem('tpo_drives');
     return saved ? JSON.parse(saved) : [];
   });
+  
   const [session, setSession] = useState<{ role: 'student' | 'admin'; studentId?: string } | null>(null);
   const [toast, setToast] = useState<ToastType | null>(null);
+
+  // Centralized Notifications State
+  const [notifications, setNotifications] = useState<AppNotification[]>(() => {
+    const saved = localStorage.getItem('tpo_notifications');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // Helper to trigger toast notifications
   const triggerToast = (message: string, type: 'success' | 'error' | 'warning' | 'info') => {
@@ -39,11 +50,55 @@ function App() {
     localStorage.setItem('tpo_drives', JSON.stringify(drives));
   }, [drives]);
 
+  useEffect(() => {
+    localStorage.setItem('tpo_notifications', JSON.stringify(notifications));
+  }, [notifications]);
+
+  // Seed notification logger helper
+  const addNotification = (
+    title: string,
+    message: string,
+    type: AppNotification['type'],
+    studentId?: string
+  ) => {
+    const newNotif: AppNotification = {
+      id: `notif_${Math.random().toString(36).substr(2, 9)}`,
+      title,
+      message,
+      type,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      read: false,
+      studentId
+    };
+    setNotifications((prev) => [newNotif, ...prev]);
+  };
+
   // Seed sample data convenience helper
   const handleSeedData = () => {
     setStudents(INITIAL_STUDENTS);
     setDrives(INITIAL_DRIVES);
-    triggerToast('Sample data seeded successfully. Feel free to log in!', 'success');
+    
+    // Clear notifications log and seed default system alerts
+    const initialNotifs: AppNotification[] = [
+      {
+        id: 'init_1',
+        title: 'Welcome to TPOHelper',
+        message: 'System database has been populated with mock students and recruiter campaigns.',
+        type: 'system',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false
+      },
+      {
+        id: 'init_2',
+        title: 'New Campaigns Launched',
+        message: 'Check out active recruitment campaigns from Google, Microsoft, Amazon, and Tesla.',
+        type: 'drive_created',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false
+      }
+    ];
+    setNotifications(initialNotifs);
+    triggerToast('Sample database seeded successfully. Feel free to sign in!', 'success');
   };
 
   const handleLogin = (role: 'student' | 'admin', studentId?: string) => {
@@ -51,14 +106,40 @@ function App() {
     if (role === 'student') {
       const std = students.find(s => s.id === studentId);
       triggerToast(`Welcome back, ${std?.name}!`, 'success');
+      addNotification(
+        'Session Logged In',
+        `Successfully logged into Student portal.`,
+        'system',
+        studentId
+      );
     } else {
       triggerToast('Administrator authenticated successfully.', 'success');
+      addNotification(
+        'Session Logged In',
+        'Administrator authenticated successfully.',
+        'system'
+      );
     }
   };
 
   const handleLogout = () => {
+    const prevSession = session;
     setSession(null);
     triggerToast('Logged out successfully.', 'info');
+    if (prevSession && prevSession.role === 'student' && prevSession.studentId) {
+      addNotification(
+        'Session Logged Out',
+        'Logged out of Student portal.',
+        'system',
+        prevSession.studentId
+      );
+    } else {
+      addNotification(
+        'Session Logged Out',
+        'Logged out of Administrator Portal.',
+        'system'
+      );
+    }
   };
 
   // Student apply to drive
@@ -112,6 +193,14 @@ function App() {
     );
 
     triggerToast(`Application submitted successfully for ${drive.companyName}!`, 'success');
+    
+    // Add Notification logs
+    addNotification(
+      'Application Submitted',
+      `You successfully registered for the ${drive.companyName} (${drive.role}) drive.`,
+      'application_status',
+      studentId
+    );
   };
 
   // Student updates resume ATS text/score
@@ -132,6 +221,12 @@ function App() {
     );
 
     triggerToast(`Resume index optimized! New ATS Score: ${score}%`, 'success');
+    addNotification(
+      'ATS Score Updated',
+      `Optimized resume text. New ATS Index score: ${score}%.`,
+      'system',
+      session.studentId
+    );
   };
 
   // Student updates profile details
@@ -140,6 +235,12 @@ function App() {
       prevStudents.map(s => s.id === updatedStudent.id ? updatedStudent : s)
     );
     triggerToast('Profile settings saved successfully.', 'success');
+    addNotification(
+      'Profile Updated',
+      'Your profile educational preferences and CV tags have been updated.',
+      'system',
+      updatedStudent.id
+    );
   };
 
   // Admin launches new drive
@@ -152,6 +253,12 @@ function App() {
 
     setDrives(prevDrives => [newDrive, ...prevDrives]);
     triggerToast(`Recruitment drive for ${newDrive.companyName} created successfully!`, 'success');
+    
+    addNotification(
+      'New Placement Drive Launched',
+      `Campaign launched for ${newDrive.companyName} (${newDrive.role}) with package ${newDrive.package}.`,
+      'drive_created'
+    );
   };
 
   // Admin suspends/reactivates drive
@@ -164,6 +271,13 @@ function App() {
             `Drive for ${d.companyName} has been ${nextState ? 'activated' : 'suspended'}.`,
             nextState ? 'success' : 'warning'
           );
+          
+          addNotification(
+            'Campaign Status Changed',
+            `Recruitment campaign for ${d.companyName} has been ${nextState ? 'reactivated' : 'temporarily suspended'}.`,
+            'system'
+          );
+          
           return { ...d, active: nextState };
         }
         return d;
@@ -181,6 +295,14 @@ function App() {
         if (s.id === studentId) {
           if (company && salaryPackage) {
             triggerToast(`${s.name} marked as Placed @ ${company}!`, 'success');
+            
+            addNotification(
+              'Placement Offer Finalized',
+              `Manual placement override: Assigned Offer at ${company} with ${salaryPackage} salary package.`,
+              'offer_received',
+              studentId
+            );
+            
             return {
               ...s,
               placementStatus: 'Placed' as const,
@@ -189,6 +311,14 @@ function App() {
             };
           } else {
             triggerToast(`${s.name} status reset to Unplaced.`, 'info');
+            
+            addNotification(
+              'Placement Status Reset',
+              'Your placement record status was reset to Unplaced by the admin coordinator.',
+              'system',
+              studentId
+            );
+            
             return {
               ...s,
               placementStatus: 'Unplaced' as const,
@@ -229,7 +359,7 @@ function App() {
                 const nextRoundName = drive.rounds[newRoundIndex];
                 return {
                   ...app,
-                  status: nextRoundName as any,
+                  status: nextRoundName as Application['status'],
                   currentRoundIndex: newRoundIndex,
                   feedback: `Successfully cleared stage "${drive.rounds[newRoundIndex - 1]}". Promoted to "${nextRoundName}".`
                 };
@@ -238,7 +368,6 @@ function App() {
             return app;
           });
 
-          // If final selection, automatically mark the student as Placed overall in their profile!
           if (isFinalSelection) {
             return {
               ...s,
@@ -260,8 +389,28 @@ function App() {
 
     if (isFinalSelection) {
       triggerToast(`Congratulations! ${student.name} has been selected for ${drive.companyName}!`, 'success');
+      
+      addNotification(
+        'Congratulations! Offer Received',
+        `You have been offered the role of ${drive.role} at ${drive.companyName} (${drive.package})!`,
+        'offer_received',
+        studentId
+      );
+      
+      addNotification(
+        'Student Placed Successfully',
+        `${student.name} secured a placement offer at ${drive.companyName}.`,
+        'placement_completed'
+      );
     } else {
       triggerToast(`${student.name} promoted to "${drive.rounds[newRoundIndex]}" for ${drive.companyName}.`, 'success');
+      
+      addNotification(
+        'Round Clearance Notification',
+        `You cleared the "${drive.rounds[newRoundIndex - 1]}" stage for ${drive.companyName}. Promoted to "${drive.rounds[newRoundIndex]}".`,
+        'interview_scheduled',
+        studentId
+      );
     }
   };
 
@@ -293,6 +442,34 @@ function App() {
     );
 
     triggerToast(`${student.name} marked as Rejected for ${drive.companyName}.`, 'warning');
+    
+    addNotification(
+      'Application Status Concluded',
+      `Recruitment pipeline for ${drive.companyName} finished at stage "${drive.rounds[student.applications.find(a => a.driveId === driveId)?.currentRoundIndex || 0]}".`,
+      'application_status',
+      studentId
+    );
+  };
+
+  // Notification management functions
+  const handleMarkAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    triggerToast('All notifications marked as read.', 'info');
+  };
+
+  const handleClearNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
+
+  const handleClearAll = () => {
+    setNotifications([]);
+    triggerToast('Notification log cleared.', 'info');
   };
 
   // Get active logged in student object
@@ -306,57 +483,15 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative">
-      {/* Background glow effects built into root */}
-      <div className="bg-glow-container">
-        <div className="bg-glow-orb bg-glow-orb-1"></div>
-        <div className="bg-glow-orb bg-glow-orb-2"></div>
-      </div>
+    <div className="min-h-screen flex flex-col relative bg-slate-950">
+      
+      {/* Dynamic Custom Cursor (Lerp optimized) */}
+      <CustomCursor />
 
-      {/* Global Notification system */}
+      {/* Global Notification Toast banner */}
       <Notification toast={toast} onClose={() => setToast(null)} />
 
-      {/* Main Header navigation bar */}
-      <header className="app-header">
-        <div className="app-logo">
-          <GraduationCap className="logo-icon animate-pulse" size={24} />
-          <span>TPOHelper</span>
-        </div>
-
-        {session && (
-          <div className="user-nav-profile">
-            {session.role === 'student' && loggedInStudent ? (
-              <div className="flex items-center gap-3">
-                <div className="hidden sm:flex flex-col text-right">
-                  <span className="text-xs font-semibold text-white truncate max-w-[120px]">{loggedInStudent.name}</span>
-                  <span className="text-[10px] text-gray-500 font-semibold uppercase">{loggedInStudent.branch}</span>
-                </div>
-                <div className="avatar">{loggedInStudent.name.charAt(0)}</div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                <div className="hidden sm:flex flex-col text-right">
-                  <span className="text-xs font-semibold text-white">TPO Coordinator</span>
-                  <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider">Administrator</span>
-                </div>
-                <div className="avatar bg-gradient-to-br from-indigo-500 to-purple-600">
-                  <Shield size={16} className="text-white" />
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={handleLogout}
-              className="btn btn-secondary btn-sm p-1.5 rounded-lg text-gray-400 hover:text-red-400 transition-colors"
-              title="Sign Out"
-            >
-              <LogOut size={16} />
-            </button>
-          </div>
-        )}
-      </header>
-
-      {/* Layout Router Router view switcher */}
+      {/* Layout Router View switcher */}
       <div className="flex-1 flex flex-col">
         {!session ? (
           <Auth
@@ -367,12 +502,20 @@ function App() {
           />
         ) : session.role === 'student' && loggedInStudent ? (
           <StudentPortal
+            key={loggedInStudent.id}
             currentStudent={loggedInStudent}
             drives={drives}
             onLogout={handleLogout}
             onApply={handleApplyDrive}
             onUpdateResumeScore={handleUpdateResumeScore}
             onUpdateStudentProfile={handleUpdateStudentProfile}
+            notifications={notifications.filter(n => n.studentId === loggedInStudent.id || !n.studentId)}
+            onMarkAsRead={handleMarkAsRead}
+            onMarkAllAsRead={handleMarkAllAsRead}
+            onClearNotification={handleClearNotification}
+            onClearAll={handleClearAll}
+            theme={theme}
+            toggleTheme={toggleTheme}
           />
         ) : (
           <AdminPortal
@@ -384,7 +527,13 @@ function App() {
             onUpdateStudentStatus={handleUpdateStudentStatus}
             onPromoteStudent={handlePromoteStudent}
             onRejectStudent={handleRejectStudent}
-            onSeedData={handleSeedData}
+            notifications={notifications}
+            onMarkAsRead={handleMarkAsRead}
+            onMarkAllAsRead={handleMarkAllAsRead}
+            onClearNotification={handleClearNotification}
+            onClearAll={handleClearAll}
+            theme={theme}
+            toggleTheme={toggleTheme}
           />
         )}
       </div>

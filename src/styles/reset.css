@@ -1,0 +1,99 @@
+/* ----------------------------------------------------
+   CSS Reset & Base Element Styling
+   ---------------------------------------------------- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 15px;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: hsl(var(--text-primary));
+  font-family: var(--font-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  z-index: 1;
+}
+
+/* Background Radial Glow Layer on Canvas */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, hsl(var(--color-primary-hsl) / 12%), transparent 40%),
+    radial-gradient(circle at bottom right, hsl(var(--color-secondary-hsl) / 12%), transparent 40%);
+  pointer-events: none;
+  z-index: -2;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+/* Standard Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border-glass));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--color-primary-hsl) / 35%);
+}
+
+:focus-visible {
+  outline: 2px solid hsl(var(--color-primary-hsl));
+  outline-offset: 3px;
+}
+
+/* Base resets for forms and buttons to avoid native browser styles */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+

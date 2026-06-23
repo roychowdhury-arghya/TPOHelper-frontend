@@ -1,0 +1,91 @@
+/* ----------------------------------------------------
+   Form Controls & Form Groups
+   ---------------------------------------------------- */
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.input-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: hsl(var(--text-secondary));
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.input-field {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  color: var(--input-text);
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.input-field:focus {
+  border-color: hsl(var(--color-primary-hsl) / 75%);
+  box-shadow: 0 4px 12px hsl(var(--color-primary-hsl) / 8%), 0 0 0 3px hsl(var(--color-primary-hsl) / 14%);
+  transform: translateY(-1px);
+}
+
+.input-field::placeholder {
+  color: hsl(var(--text-placeholder));
+}
+
+select.input-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(148,163,184,0.6)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 1.1em;
+  padding-right: 2.25rem;
+}
+
+select.input-field option {
+  background-color: hsl(var(--bg-elevated));
+  color: hsl(var(--text-primary));
+}
+
+/* Custom premium checkbox styling */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: var(--radius-sm);
+  background-color: rgba(2, 6, 23, 0.8) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+

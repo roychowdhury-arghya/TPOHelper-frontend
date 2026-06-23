@@ -1,0 +1,291 @@
+/* ----------------------------------------------------
+   Layout Systems & Structural Grid Containers
+   ---------------------------------------------------- */
+
+/* Single, unified definition for .dashboard-layout */
+.dashboard-layout {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+    padding: 16px 20px;
+    gap: 16px;
+  }
+}
+
+/* Single, unified definition for .metrics-grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Single, unified definition for .app-header */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(11, 18, 32, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid hsl(var(--border-glass));
+  padding: 12px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+[data-theme="light"] .app-header {
+  background: rgba(248, 250, 252, 0.8);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 16px;
+  }
+}
+
+/* Side Menu structure */
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  color: hsl(var(--text-secondary));
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border: 1px solid transparent;
+  position: relative;
+}
+
+/* Premium vertical indicator line for the active menu item */
+.menu-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 3px;
+  background: var(--color-primary);
+  border-radius: 99px;
+  opacity: 0;
+  transform: scaleY(0.4);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.menu-item.active::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.menu-item:hover,
+.menu-item.active {
+  color: #ffffff;
+  background: hsl(var(--color-primary-hsl) / 10%);
+  border-color: hsl(var(--color-primary-hsl) / 20%);
+}
+
+[data-theme="light"] .menu-item:hover,
+[data-theme="light"] .menu-item.active {
+  color: var(--color-primary);
+  background: hsl(var(--color-primary-hsl) / 6%);
+  border-color: hsl(var(--color-primary-hsl) / 12%);
+}
+
+.menu-item.active {
+  background: hsl(var(--color-primary-hsl) / 14%);
+  border-color: hsl(var(--color-primary-hsl) / 35%);
+  box-shadow: 0 0 15px -3px hsl(var(--color-primary-hsl) / 15%);
+}
+
+/* Custom styled desktop sidebar containing semantic classes */
+.desktop-sidebar {
+  display: none; /* hidden below md */
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid hsl(var(--border-glass));
+  background: hsl(var(--bg-surface));
+  padding: 16px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  width: 280px; /* Default desktop expanded width is 280px */
+}
+
+[data-theme="light"] .desktop-sidebar {
+  background: #ffffff;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Collapsed state modifier */
+.desktop-sidebar.collapsed {
+  width: 80px;
+}
+
+@media (min-width: 768px) {
+  .desktop-sidebar {
+    display: flex;
+  }
+}
+
+/* Tablet viewports: collapse sidebar contents dynamically */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .desktop-sidebar {
+    width: 80px;
+  }
+  /* Hide labels, admin profile cards and texts */
+  .desktop-sidebar .menu-item span:not(.shrink-0),
+  .desktop-sidebar .user-profile-details,
+  .desktop-sidebar .admin-profile-card,
+  .desktop-sidebar h4,
+  .desktop-sidebar p {
+    display: none !important;
+  }
+  .desktop-sidebar .glass-card {
+    padding: 8px !important;
+    text-align: center;
+  }
+}
+
+/* General Layout helpers */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.bg-glow-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.08;
+  mix-blend-mode: screen;
+  animation: floatOrb 22s infinite alternate ease-in-out;
+}
+
+.bg-glow-orb-1 {
+  top: -15%;
+  left: 5%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, hsl(var(--color-primary-hsl)) 0%, transparent 75%);
+}
+
+.bg-glow-orb-2 {
+  bottom: -15%;
+  right: 5%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, hsl(var(--color-secondary-hsl)) 0%, transparent 75%);
+  animation-delay: -8s;
+}
+
+/* Avatars & Profiles */
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, hsl(var(--color-primary-hsl)), hsl(var(--color-secondary-hsl)));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  border: 2px solid hsl(var(--border-glass));
+}
+
+.admin-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, hsl(var(--color-secondary-hsl)), hsl(var(--color-primary-hsl)));
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.admin-profile-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, hsl(var(--color-primary-hsl) / 15%), hsl(var(--bg-surface) / 50%));
+  border: 1px solid hsl(var(--color-primary-hsl) / 20%);
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff 30%, hsl(var(--color-primary-light-hsl)));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .app-logo {
+  background: linear-gradient(135deg, var(--color-primary) 30%, #1e40af);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.logo-icon {
+  color: hsl(var(--color-primary-light-hsl));
+}
+
+[data-theme="light"] .logo-icon {
+  color: var(--color-primary);
+}
+
+.user-nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
